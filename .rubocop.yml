@@ -1,0 +1,9 @@
+AllCops:
+  TargetRubyVersion: 2.4
+  DisplayCopNames: true
+  Include:
+    - 'lib/**/*'
+  Exclude:
+    - 'spec/**/*'
+
+inherit_from: .rubocop_todo.yml
