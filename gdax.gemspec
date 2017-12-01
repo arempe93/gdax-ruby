@@ -17,6 +17,8 @@ Gem::Specification.new do |s|
 
   s.required_ruby_version = Gem::Requirement.new '>= 2.0'
 
+  s.add_dependency 'faraday', '~> 0.10'
+
   s.add_development_dependency 'coveralls', '~> 0.8'
   s.add_development_dependency 'rake', '~> 10.5'
   s.add_development_dependency 'rspec', '~> 3.4'
