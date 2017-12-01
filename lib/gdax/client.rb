@@ -2,7 +2,7 @@
 
 module GDAX
   class Client
-    ConfigError = Class.new(StandardError)
+    ConfigError = Class.new(Error)
 
     USER_AGENT = "Faraday v#{Faraday::VERSION}; gdax-ruby v#{VERSION}"
 
@@ -31,8 +31,11 @@ module GDAX
       self.conn = conn || self.class.default_conn
     end
 
+    #
+    # Execute a request to the GDAX api
+    #
     def request(method, path, params: {}, headers: {})
-      check_authentication_config!
+      check_access_config!
 
       url = URL.new("#{GDAX.api_base}#{path}")
       requested_at = Time.now.to_i.to_s
@@ -52,13 +55,18 @@ module GDAX
       execute_with_rescues { conn.run_request(method, url.to_s, body, headers) }
     end
 
+    private
+
+    #
+    # Executes request in block with rescues
+    #
     def execute_with_rescues
-      faraday_response = yield
-      Response.new(faraday_response)
+      Response.from_faraday(yield)
+    rescue Faraday::TimeoutError, Faraday::ConnectionFailed => e
+      raise ConnectionError.new(e.message)
     rescue Faraday::ClientError => e
-      p 'client error'
-    rescue StandardError => e
-      p 'standard error'
+      response = Response.from_hash(e.response)
+      raise APIError.new(response[:message], response: response)
     end
 
     def sign(message)
@@ -67,9 +75,10 @@ module GDAX
       Base64.strict_encode64(hash)
     end
 
-    private
-
-    def check_authentication_config!
+    #
+    # Ensure all access config options are set
+    #
+    def check_access_config!
       %i[api_key api_secret api_passphrase].each do |key|
         raise ConfigError, "#{key} is missing, set with GDAX.#{key}=" unless GDAX.config[key]
       end

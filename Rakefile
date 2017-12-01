@@ -36,6 +36,7 @@ task :console do
   require 'gdax'
   ARGV.clear
 
+  GDAX.api_base = 'https://httpbin.org'
   GDAX.api_key = 'test_api_key'
   GDAX.api_secret = Base64.encode64('test_api_secret')
   GDAX.api_passphrase = 'test_api_passphrase'
