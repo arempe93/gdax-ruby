@@ -36,10 +36,10 @@ task :console do
   require 'gdax'
   ARGV.clear
 
-  GDAX.api_base = 'https://httpbin.org'
-  GDAX.api_key = 'test_api_key'
-  GDAX.api_secret = Base64.encode64('test_api_secret')
-  GDAX.api_passphrase = 'test_api_passphrase'
+  GDAX.api_base = 'https://api-public.sandbox.gdax.com'
+  GDAX.api_key = ENV['GDAX_SANDBOX_API_KEY']
+  GDAX.api_secret = ENV['GDAX_SANDBOX_API_SECRET']
+  GDAX.api_passphrase = ENV['GDAX_SANDBOX_API_PASSPHRASE']
 
   IRB.start
 end

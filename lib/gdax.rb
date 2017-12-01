@@ -9,9 +9,19 @@ require 'openssl'
 
 require 'gdax/errors'
 
+require 'gdax/client/verbs'
 require 'gdax/client'
+
 require 'gdax/response'
 require 'gdax/url'
+
+require 'gdax/operations/get'
+require 'gdax/operations/list'
+
+require 'gdax/collection'
+require 'gdax/resource'
+
+require 'gdax/account'
 
 require 'gdax/version'
 
@@ -33,7 +43,7 @@ module GDAX
     attr_accessor :config
 
     #
-    # Allows access to configuration options through dot-syntax
+    # Allow access to configuration options through dot-syntax
     #
     def method_missing(method_name, *args, &block)
       setter = method_name.to_s.end_with?('=')

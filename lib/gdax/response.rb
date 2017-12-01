@@ -6,7 +6,7 @@ module GDAX
   #
   class Response
     # Error for invalid response bodies
-    InvalidResponseError = Class.new(Error)
+    InvalidResponseError = Class.new(APIError)
 
     class << self
       #
@@ -44,7 +44,7 @@ module GDAX
       @headers = headers
       @status = status
       @data = JSON.parse(body, symbolize_names: true)
-    rescue JSON::ParserError => e
+    rescue JSON::ParserError
       raise InvalidResponseError.new("Invalid response: #{body}", response: self)
     end
 
@@ -59,7 +59,7 @@ module GDAX
     # Show object info, with data
     #
     def inspect
-      "#<GDAX::Response @status=#{@status} #{to_s}>"
+      "#<GDAX::Response @status=#{@status} #{self}>"
     end
 
     #

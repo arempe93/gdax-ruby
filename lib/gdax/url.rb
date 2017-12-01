@@ -2,16 +2,18 @@
 
 module GDAX
   class URL
-    attr_reader :base, :params
+    attr_accessor :path
 
-    def initialize(base, extra_params = {})
-      @base, @params = extract_url_parts(base)
-      add_params!(extra_params)
+    attr_reader :params
+
+    def initialize(path, params = {})
+      @path = path
+      @params = params
     end
 
     def initialize_dup(other)
       super
-      @base = other.base.dup
+      @path = other.path.dup
       @params = other.params.dup
     end
 
@@ -47,6 +49,10 @@ module GDAX
       tap { params.delete(key) }
     end
 
+    def location
+      "#{GDAX.api_base}#{@path}"
+    end
+
     def query?
       !@params.empty?
     end
@@ -56,26 +62,13 @@ module GDAX
     end
 
     def to_s
-      query? ? "#{@base}?#{to_query(@params)}" : @base
+      query? ? "#{location}?#{to_query(@params)}" : location
     end
 
     private
 
     def to_query(hash)
       hash.map { |k, v| "#{CGI.escape(k.to_s)}=#{CGI.escape(v.to_s)}" }.join('&')
-    end
-
-    def extract_url_parts(url)
-      base, query = url.split('?')
-
-      return [base, {}] unless query
-
-      params = query.split('&').each_with_object({}) do |pair, acc|
-        key, value = pair.split('=').map { |str| CGI.unescape(str) }
-        acc[key.to_sym] = value
-      end
-
-      [base, params]
     end
   end
 end

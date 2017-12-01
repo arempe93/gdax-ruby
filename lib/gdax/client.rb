@@ -2,21 +2,28 @@
 
 module GDAX
   class Client
+    include Client::Verbs
+
+    # Error for missing configurations
     ConfigError = Class.new(Error)
 
+    # Custom user agent on all requests
     USER_AGENT = "Faraday v#{Faraday::VERSION}; gdax-ruby v#{VERSION}"
 
+    # Faraday connection
     attr_accessor :conn
 
     class << self
+      #
+      # Get current client for thread
+      #
       def current
         Thread.current[:gdax_client] || default_client
       end
 
-      def default_client
-        Thread.current[:gdax_default_client] ||= Client.new(default_conn)
-      end
-
+      #
+      # Create a default Faraday connection for thread
+      #
       def default_conn
         Thread.current[:gdax_default_conn] ||= Faraday.new do |c|
           c.use Faraday::Request::UrlEncoded
@@ -25,37 +32,50 @@ module GDAX
           c.headers = { 'Content-Type' => 'application/json', 'User-Agent' => USER_AGENT }
         end
       end
+
+      private
+
+      #
+      # Create a default client for thread
+      #
+      def default_client
+        Thread.current[:gdax_default_client] ||= Client.new(default_conn)
+      end
     end
 
+    #
+    # Create a new Client with Faraday connection
+    #
     def initialize(conn = nil)
       self.conn = conn || self.class.default_conn
     end
 
+    private
+
     #
     # Execute a request to the GDAX api
     #
-    def request(method, path, params: {}, headers: {})
+    def request(method, url, body = nil)
       check_access_config!
 
-      url = URL.new("#{GDAX.api_base}#{path}")
-      requested_at = Time.now.to_i.to_s
-
-      body = case method
-             when :get, :head, :delete
-               nil.tap { url.add_params!(params) }
-             else
-               params.to_json
-             end
-
-      headers['CB-ACCESS-KEY'] = GDAX.api_key
-      headers['CB-ACCESS-TIMESTAMP'] = requested_at
-      headers['CB-ACCESS-PASSPHRASE'] = GDAX.api_passphrase
-      headers['CB-ACCESS-SIGN'] = sign("#{requested_at}#{method.upcase}#{path}#{body}")
+      headers = access_headers(method, url.path, body)
 
       execute_with_rescues { conn.run_request(method, url.to_s, body, headers) }
     end
 
-    private
+    #
+    # Create all GDAX API required access headers
+    #
+    def access_headers(method, path, body)
+      timestamp = Time.now.to_i.to_s
+
+      {
+        'CB-ACCESS-KEY' => GDAX.api_key,
+        'CB-ACCESS-TIMESTAMP' => timestamp,
+        'CB-ACCESS-PASSPHRASE' => GDAX.api_passphrase,
+        'CB-ACCESS-SIGN' => sign("#{timestamp}#{method.upcase}#{path}#{body}")
+      }
+    end
 
     #
     # Executes request in block with rescues
@@ -63,12 +83,15 @@ module GDAX
     def execute_with_rescues
       Response.from_faraday(yield)
     rescue Faraday::TimeoutError, Faraday::ConnectionFailed => e
-      raise ConnectionError.new(e.message)
+      raise ConnectionError, e.message
     rescue Faraday::ClientError => e
       response = Response.from_hash(e.response)
       raise APIError.new(response[:message], response: response)
     end
 
+    #
+    # Sign a message with the api secret, using HMAC SHA256
+    #
     def sign(message)
       secret = Base64.decode64(GDAX.api_secret)
       hash = OpenSSL::HMAC.digest('sha256', secret, message)

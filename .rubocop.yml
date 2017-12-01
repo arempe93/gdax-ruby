@@ -6,4 +6,13 @@ AllCops:
   Exclude:
     - 'spec/**/*'
 
+Metrics/AbcSize:
+  Max: 20
+
+Metrics/LineLength:
+  Max: 100
+
+Metrics/MethodLength:
+  Max: 15
+
 inherit_from: .rubocop_todo.yml
