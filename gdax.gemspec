@@ -15,7 +15,7 @@ Gem::Specification.new do |s|
   s.homepage    = 'https://github.com/arempe93/gdax-ruby'
   s.license     = 'MIT'
 
-  s.required_ruby_version = Gem::Requirement.new '>= 2.0'
+  s.required_ruby_version = Gem::Requirement.new '>= 2.1'
 
   s.add_dependency 'faraday', '~> 0.10'
 

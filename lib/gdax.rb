@@ -15,6 +15,8 @@ require 'gdax/client'
 require 'gdax/response'
 require 'gdax/url'
 
+require 'gdax/operations/create'
+require 'gdax/operations/delete'
 require 'gdax/operations/get'
 require 'gdax/operations/list'
 
@@ -22,6 +24,9 @@ require 'gdax/collection'
 require 'gdax/resource'
 
 require 'gdax/account'
+require 'gdax/deposit'
+require 'gdax/order'
+require 'gdax/position'
 
 require 'gdax/version'
 

@@ -4,8 +4,8 @@ module GDAX
   module Operations
     module Get
       module ClassMethods
-        def retrieve(id)
-          new(id: id).reload
+        def retrieve(params = {})
+          new(params).reload
         end
       end
 

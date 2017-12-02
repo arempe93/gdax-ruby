@@ -5,8 +5,6 @@ module GDAX
   # Abstract wrapper for objects corresponding to api endpoints
   #
   class Resource
-    include Operations::Get
-
     class << self
       #
       # Get relative path of this resource class
@@ -23,9 +21,6 @@ module GDAX
         name.split('::').last
       end
     end
-
-    # Object id
-    attr_reader :id
 
     # Response data
     attr_reader :data
@@ -65,11 +60,18 @@ module GDAX
       "#{self.class.resource_url}/#{CGI.escape(id)}"
     end
 
+    def inspect
+      "#<#{self.class} #{self}>"
+    end
+
+    def to_s
+      @data.inspect
+    end
+
     private
 
     # @api private
     def initialize_from(data)
-      @id = data[:id]
       @data = data
     end
   end
