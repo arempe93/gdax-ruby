@@ -21,14 +21,14 @@ require 'gdax/operations/get'
 require 'gdax/operations/list'
 
 require 'gdax/collection'
-require 'gdax/nested_collection'
 require 'gdax/resource'
 
+require 'gdax/nested_collection'
 require 'gdax/nested_resource'
-require 'gdax/object'
 
 require 'gdax/account'
 require 'gdax/account_history'
+require 'gdax/account_hold'
 require 'gdax/deposit'
 require 'gdax/order'
 require 'gdax/position'
