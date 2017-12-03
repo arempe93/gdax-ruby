@@ -9,7 +9,7 @@ module GDAX
       #
       # Get relative path of this resource class
       #
-      def resource_url
+      def resource_url(*)
         raise NotImplementedError 'Resource is an abstract class' if self == Resource
         "/#{CGI.escape(class_name.downcase)}s"
       end
@@ -25,11 +25,19 @@ module GDAX
     # Response data
     attr_reader :data
 
+    # Request params
+    attr_reader :params
+
     #
-    # Load resource with response data
+    # Load resource with request params
     #
-    def initialize(data = {})
-      initialize_from(data)
+    def initialize(params = {})
+      @params = params
+      @data = {}
+    end
+
+    def load(data)
+      tap { @data = data }
     end
 
     #
@@ -53,26 +61,12 @@ module GDAX
       @data.key?(method_name) || super
     end
 
-    #
-    # Get relative path of this resource instance
-    #
-    def resource_url
-      "#{self.class.resource_url}/#{CGI.escape(id)}"
-    end
-
     def inspect
       "#<#{self.class} #{self}>"
     end
 
     def to_s
       @data.inspect
-    end
-
-    private
-
-    # @api private
-    def initialize_from(data)
-      @data = data
     end
   end
 end

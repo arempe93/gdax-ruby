@@ -53,6 +53,10 @@ module GDAX
       "#{GDAX.api_base}#{@path}"
     end
 
+    def path_with_query
+      query ? "#{@path}?#{to_query(@params)}" : @path
+    end
+
     def query?
       !@params.empty?
     end

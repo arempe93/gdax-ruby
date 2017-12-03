@@ -16,11 +16,10 @@ module GDAX
       #
       # Reload data from the api
       #
-      def reload(params = {})
-        tap do
-          response = Client.current.get(resource_url, params)
-          initialize_from(response.data)
-        end
+      def reload(params = nil)
+        @params = params if params
+        response = Client.current.get(resource_url, @params)
+        load(response.data)
       end
     end
   end

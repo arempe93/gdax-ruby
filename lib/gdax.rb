@@ -21,9 +21,14 @@ require 'gdax/operations/get'
 require 'gdax/operations/list'
 
 require 'gdax/collection'
+require 'gdax/nested_collection'
 require 'gdax/resource'
 
+require 'gdax/nested_resource'
+require 'gdax/object'
+
 require 'gdax/account'
+require 'gdax/account_history'
 require 'gdax/deposit'
 require 'gdax/order'
 require 'gdax/position'
@@ -40,7 +45,8 @@ module GDAX
     api_key: ENV['GDAX_API_KEY'],
     api_secret: ENV['GDAX_API_SECRET'],
     api_passphrase: ENV['GDAX_API_PASSPHRASE'],
-    logger: Logger.new(STDOUT)
+    logger: Logger.new(STDOUT),
+    use_server_time: false
   }
 
   class << self

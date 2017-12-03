@@ -15,8 +15,8 @@ module GDAX
 
     def initialize(klazz, params)
       @klazz = klazz
-      @items = []
       @params = params
+      @items = []
     end
 
     def each(&block)
@@ -24,10 +24,8 @@ module GDAX
     end
 
     def reload
-      tap do
-        response = Client.current.get(@klazz.resource_url, @params)
-        load(response.data)
-      end
+      response = Client.current.get(@klazz.resource_url(@params), @params)
+      tap { load(response.data) }
     end
 
     def inspect
@@ -42,7 +40,10 @@ module GDAX
 
     # @api private
     def load(items)
-      @items = items.map { |e| klazz.new(e) }
+      @items = items.map do |data|
+        params = { id: data[:id] }
+        klazz.new(params).load(data)
+      end
     end
   end
 end

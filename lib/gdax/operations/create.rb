@@ -6,7 +6,7 @@ module GDAX
       module ClassMethods
         def create(params)
           response = Client.current.post(resource_url, params)
-          new(response.data)
+          new(params).load(response.data)
         end
       end
 
