@@ -11,14 +11,21 @@ module GDAX
       #
       def resource_url(*)
         raise NotImplementedError 'Resource is an abstract class' if self == Resource
-        "/#{CGI.escape(class_name.downcase)}s"
+        "/#{CGI.escape(endpoint.downcase)}s"
       end
 
       #
-      # Get class name without module namespace
+      # Get class name without module namespacing
       #
       def class_name
         name.split('::').last
+      end
+
+      #
+      # Get class name as an endpoint string
+      #
+      def endpoint
+        class_name.gsub(/([a-z])([A-Z])/, '\1-\2').downcase
       end
     end
 
