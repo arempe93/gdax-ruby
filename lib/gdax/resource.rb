@@ -1,12 +1,12 @@
 # frozen_string_literal: true
 
 module GDAX
-  #
+  ##
   # Abstract wrapper for objects corresponding to api endpoints
   #
   class Resource
     class << self
-      #
+      ##
       # Get relative path of this resource class
       #
       def resource_url(*)
@@ -14,14 +14,14 @@ module GDAX
         "/#{CGI.escape(endpoint.downcase)}s"
       end
 
-      #
+      ##
       # Get class name without module namespacing
       #
       def class_name
         name.split('::').last
       end
 
-      #
+      ##
       # Get class name as an endpoint string
       #
       def endpoint
@@ -35,33 +35,48 @@ module GDAX
     # Request params
     attr_reader :params
 
+    ##
+    # Initialize resource with request params
     #
-    # Load resource with request params
+    # @param [Hash] params Request parameters (eg. id)
+    #
+    # @api public
     #
     def initialize(params = {})
       @params = params
       @data = {}
     end
 
+    ##
+    # Load data into object
+    #
+    # @param [Hash,Array] data Response data
+    #
+    # @api private
+    #
     def load(data)
       tap { @data = data }
     end
 
-    #
+    ##
     # Key access to data
+    #
+    # @param [Symbol] key JSON key of data
+    #
+    # @api public
     #
     def [](key)
       @data[key]
     end
 
-    #
+    ##
     # Allow access to data through dot-syntax
     #
     def method_missing(method_name, *args, &block)
       @data.key?(method_name) ? @data[method_name] : super
     end
 
-    #
+    ##
     # Properly implements respond_to? for data
     #
     def respond_to_missing?(method_name, include_private = false)

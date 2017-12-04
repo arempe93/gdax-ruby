@@ -47,6 +47,12 @@ GDAX::Withdrawal.crypto(address: '...', currency: 'BTC', amount: 10)
 # => #<GDAX::Response { ... }>
 ```
 
+## Conventions
+
+* Both objects and collections can be updated from the server by calling `reload`
+
+* Attributes can be accessed by key syntax (`[:id]`) or dot syntax (`.id`)
+
 ## Configuration
 
 #### Required (for authenticated apis)
@@ -66,7 +72,9 @@ GDAX.use_server_time # default: false
 
 ## Handling Errors
 
-Errors from the GDAX API will be of type `GDAX::APIError`, and will contain `response`. Timeout and network issues will be of type `GDAX::ConnectionError`, a subclass of `GDAX::APIError` with no response informtion.
+Errors from the GDAX API will be of type `GDAX::APIError`, and will contain `response`. Timeout and network issues will be of type `GDAX::ConnectionError`.
+
+All handled errors are of class `GDAX::Error`
 
 ### Documentation
 

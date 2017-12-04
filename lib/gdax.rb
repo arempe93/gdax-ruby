@@ -42,7 +42,7 @@ require 'gdax/withdrawal'
 
 require 'gdax/version'
 
-#
+##
 # A Ruby client to GDAX REST API
 #
 module GDAX
@@ -60,7 +60,7 @@ module GDAX
     # Stores global configuration options
     attr_accessor :config
 
-    #
+    ##
     # Allow access to configuration options through dot-syntax
     #
     def method_missing(method_name, *args, &block)
@@ -74,7 +74,7 @@ module GDAX
       end
     end
 
-    #
+    ##
     # Properly implements respond_to? for configuration options
     #
     def respond_to_missing?(method_name, include_private = false)

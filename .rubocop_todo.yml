@@ -16,8 +16,4 @@ Naming/FileName:
 
 # Offense count: 3
 Style/Documentation:
-  Exclude:
-    - 'lib/gdax/client.rb'
-    - 'lib/gdax/errors.rb'
-    - 'lib/gdax/url.rb'
-    - 'lib/gdax/operations/**/*'
+  Enabled: false

@@ -1,6 +1,9 @@
 # frozen_string_literal: true
 
 module GDAX
+  ##
+  # URL helper
+  #
   class URL
     attr_accessor :path
 
@@ -25,6 +28,10 @@ module GDAX
       @params[key] = value
     end
 
+    def absolute_path
+      "#{GDAX.api_base}#{@path}"
+    end
+
     def add_params(**params)
       dup.tap { |d| d.add_params!(params) }
     end
@@ -34,7 +41,7 @@ module GDAX
     end
 
     def clear_params
-      dup.tap { |d| d.clear_params! }
+      dup.tap(&:clear_params!)
     end
 
     def clear_params!
@@ -47,10 +54,6 @@ module GDAX
 
     def drop_params!(*keys)
       tap { Array(keys).each { |key| @params.delete(key) } }
-    end
-
-    def location
-      "#{GDAX.api_base}#{@path}"
     end
 
     def path_with_query
@@ -73,7 +76,7 @@ module GDAX
     end
 
     def to_s
-      query? ? "#{location}?#{query}" : location
+      query? ? "#{absolute_path}?#{query}" : absolute_path
     end
   end
 end
