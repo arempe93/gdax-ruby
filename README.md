@@ -8,7 +8,7 @@ An object-oriented client for the GDAX REST API. Heavily inspired by the [Stripe
 #### Place an order, then cancel it
 
 ```ruby
-order = GDAX::Order.create(side: buy, product_id: 'BTC-USD', price: 100, size: 0.5)
+order = GDAX::Order.buy(product_id: 'BTC-USD', price: 100, size: 0.5)
 # => #<GDAX::Order { id: 'cb6a1d6d-2c78-4da5-9961-14795d0d4379' ... }>
 
 order.cancel
