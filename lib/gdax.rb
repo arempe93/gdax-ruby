@@ -2,10 +2,11 @@
 
 require 'base64'
 require 'cgi'
-require 'faraday'
 require 'logger'
 require 'json'
 require 'openssl'
+
+require 'faraday'
 
 require 'gdax/errors'
 
