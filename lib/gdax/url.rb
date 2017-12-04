@@ -34,19 +34,19 @@ module GDAX
     end
 
     def clear_params
-      dup.tap { d.clear_params! }
+      dup.tap { |d| d.clear_params! }
     end
 
     def clear_params!
       tap { @params = {} }
     end
 
-    def drop_param(key)
-      dup.tap { drop_param!(key) }
+    def drop_params(*keys)
+      dup.tap { |d| d.drop_params!(*keys) }
     end
 
-    def drop_param!(key)
-      tap { params.delete(key) }
+    def drop_params!(*keys)
+      tap { Array(keys).each { |key| @params.delete(key) } }
     end
 
     def location
@@ -54,7 +54,14 @@ module GDAX
     end
 
     def path_with_query
-      query ? "#{@path}?#{to_query(@params)}" : @path
+      query? ? "#{@path}?#{query}" : @path
+    end
+
+    def query
+      @params.keys.sort.map do |key|
+        value = @params[key]
+        "#{CGI.escape(key.to_s)}=#{CGI.escape(value.to_s)}"
+      end.join('&')
     end
 
     def query?
@@ -66,13 +73,7 @@ module GDAX
     end
 
     def to_s
-      query? ? "#{location}?#{to_query(@params)}" : location
-    end
-
-    private
-
-    def to_query(hash)
-      hash.map { |k, v| "#{CGI.escape(k.to_s)}=#{CGI.escape(v.to_s)}" }.join('&')
+      query? ? "#{location}?#{query}" : location
     end
   end
 end

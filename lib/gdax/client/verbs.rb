@@ -8,7 +8,7 @@ module GDAX
         request(:delete, url, nil)
       end
 
-      def get(path, params = {}, public: false)
+      def get(path, params = {}, public = false)
         url = URL.new(path, params)
         request(:get, url, nil, public)
       end

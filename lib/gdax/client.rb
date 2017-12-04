@@ -58,7 +58,7 @@ module GDAX
     def request(method, url, body = nil, public = false)
       check_access_config!
 
-      headers = access_headers(method, url.path, body) unless public
+      headers = access_headers(method, url, body) unless public
 
       execute_with_rescues { conn.run_request(method, url.to_s, body, headers) }
     end
@@ -66,14 +66,14 @@ module GDAX
     #
     # Create all GDAX API required access headers
     #
-    def access_headers(method, path, body)
+    def access_headers(method, url, body)
       requested_at = timestamp
 
       {
         'CB-ACCESS-KEY' => GDAX.api_key,
         'CB-ACCESS-TIMESTAMP' => requested_at,
         'CB-ACCESS-PASSPHRASE' => GDAX.api_passphrase,
-        'CB-ACCESS-SIGN' => sign("#{requested_at}#{method.upcase}#{path}#{body}")
+        'CB-ACCESS-SIGN' => sign("#{requested_at}#{method.upcase}#{url.path_with_query}#{body}")
       }
     end
 
@@ -99,7 +99,7 @@ module GDAX
     end
 
     def timestamp
-      GDAX.use_server_time ? get('/time', {}, public: true)[:epoch] : Time.now.to_i.to_s
+      GDAX.use_server_time ? get('/time', {}, true)[:epoch] : Time.now.to_i.to_s
     end
 
     #
