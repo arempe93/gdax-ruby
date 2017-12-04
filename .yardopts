@@ -1,8 +1,8 @@
 --no-private
 --protected
---markup="markdown" lib/**/*.rb
---main README.md
+--markup="markdown"
 --hide-tag todo
 -
 LICENSE
+README.md
 CHANGELOG.md

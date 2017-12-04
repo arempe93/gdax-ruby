@@ -58,7 +58,7 @@ module GDAX
     ##
     # Create a new Client with Faraday::Connection
     #
-    # @param [Faraday::Connection,Nil] A Faraday connection to use, defaults to ::default_conn
+    # @param [Faraday::Connection,Nil] conn Faraday connection to use, defaults to ::default_conn
     #
     # @api public
     #
