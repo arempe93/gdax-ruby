@@ -8,6 +8,8 @@ require 'openssl'
 
 require 'faraday'
 
+require 'gdax/version'
+
 require 'gdax/errors'
 
 require 'gdax/client/verbs'
@@ -40,8 +42,6 @@ require 'gdax/product'
 require 'gdax/position'
 require 'gdax/report'
 require 'gdax/withdrawal'
-
-require 'gdax/version'
 
 ##
 # A Ruby client to GDAX REST API
